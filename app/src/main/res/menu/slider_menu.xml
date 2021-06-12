@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/copy"
+        android:title="Copy to">
+    </item>
+
+    <item
+        android:id="@+id/move"
+        android:title="Move to">
+    </item>
+
+    <item
+        android:id="@+id/rename"
+        android:title="Rename">
+    </item>
+
+    <item
+        android:id="@+id/print"
+        android:title="Print">
+    </item>
+
+    <item
+        android:id="@+id/wallpaper"
+        android:title="Set as Wallpaper">
+    </item>
+
+    <item
+        android:id="@+id/details"
+        android:title="Details">
+    </item>
+
+</menu>

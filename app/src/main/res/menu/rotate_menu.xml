@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/rotate_right"
+        android:icon="@drawable/ic_rotate_right"
+        android:title="Rotate Right">
+    </item>
+
+    <item
+        android:id="@+id/rotate_left"
+        android:icon="@drawable/ic_rotate_left"
+        android:title="Rotate Left">
+
+    </item>
+
+    <item
+        android:id="@+id/rotate_bottom"
+        android:icon="@drawable/ic_bottom"
+        android:title="Rotate Bottom">
+
+    </item>
+
+</menu>
