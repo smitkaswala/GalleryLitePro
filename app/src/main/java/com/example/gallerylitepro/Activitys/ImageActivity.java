@@ -64,6 +64,7 @@ public class ImageActivity extends AppCompatActivity {
         Bucket_Id = albumDetail.getBucket_id();
         Title = albumDetail.getBucketName();
     }
+
     private void initView(){
         folder_name.setText(Title);
         recyclerView.setLayoutManager(new GridLayoutManager(getBaseContext(), Utils.COLUMN));
@@ -76,5 +77,13 @@ public class ImageActivity extends AppCompatActivity {
             imageAdapter.notifyDataSetChanged();
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(Utils.IsUpdate){
+            initView();
+        }
     }
 }

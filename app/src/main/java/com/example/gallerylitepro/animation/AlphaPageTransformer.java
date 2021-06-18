@@ -33,4 +33,5 @@ public class AlphaPageTransformer extends BasePageTransformer {
     public void setMinScale(float minScale) {
         mMinScale = minScale;
     }
+
 }

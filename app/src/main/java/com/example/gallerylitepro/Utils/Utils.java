@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
+import com.example.gallerylitepro.Activitys.EditingActivity;
 import com.example.gallerylitepro.Classes.AlbumDetail;
 
 import java.io.ByteArrayOutputStream;
@@ -30,13 +31,16 @@ import java.util.Random;
 public class Utils {
 
     public static ArrayList<AlbumDetail> mFolderDialogList = new ArrayList<>();
+    public static ArrayList<AlbumDetail> mVideosDialogList = new ArrayList<>();
     public static String VIEW_TYPE="Grid";
     public static String SORTING_TYPE = "";
     public static String SORTING_TYPE2 = "";
     public static int COLUMN = 2;
     public static boolean IsUpdate=false;
+    public static boolean IsUpdateVideos=false;
     public static File mOriginalFile;
     public static String mEditpath;
+    public static String mVideopath;
     public static Bitmap mOriginalBitmap;
     public static Bitmap mEditedBitmap;
     public static Uri mEditedURI;
@@ -110,7 +114,67 @@ public class Utils {
         return !file.exists();
     }
 
+    public static File CaptureImage(Uri uri,Context context) {
+        c=context;
+        Bitmap bitmap=null;
+        File f = null;
+        try {
+            // create bitmap screen capture
+            try
+            {
+                bitmap = MediaStore.Images.Media.getBitmap(c.getContentResolver() , uri);
+            }
+            catch (Exception e)
+            {
+                //handle exception
+            }
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+
+            //----------------dsestination path--------
+            String ParentPath=Utils.mOriginalFile.getParentFile().getPath();
+//            Log.e("Parent path:",ParentPath + "*");
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            Uri destination = Uri.fromFile(new File(ParentPath + "/" + timeStamp + ".jpg"));
+            String NewImagePath=destination.getPath();
+//            Log.e("New path:",NewImagePath + "*");
+            //-----------------------------------------
+            if (NewImagePath != null) {
+                f = new File(NewImagePath);
+                try {
+                    f.createNewFile();
+                    FileOutputStream fo = new FileOutputStream(f);
+                    fo.write(bytes.toByteArray());
+                    fo.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                //------------insert into media list----
+                File newfilee = new File(destination.getPath());
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.DATA, destination.getPath());
+                values.put(MediaStore.Images.Media.DATE_TAKEN, newfilee.lastModified());
+                scanPhoto(newfilee.getPath());
+                Toast.makeText(c,"Image saved successfully!!!",Toast.LENGTH_SHORT).show();
+                Uri uri1;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    uri1 = FileProvider.getUriForFile(c.getApplicationContext(), c.getPackageName() + ".provider", newfilee);
+                } else {
+                    uri1 = Uri.fromFile(newfilee);
+                }
+                c.getContentResolver().notifyChange(uri1, null);
+                Utils.IsUpdate=true;
+                EditingActivity.list.add(0,NewImagePath);
+            }
+        } catch (Exception e) {
+        }
+        return f;
+
+    }
+
     public static MediaScannerConnection msConn;
+
     public static void scanPhoto(final String imageFileName) {
         msConn = new MediaScannerConnection(c, new MediaScannerConnection.MediaScannerConnectionClient() {
             public void onMediaScannerConnected() {

@@ -64,7 +64,7 @@
                 android:layout_gravity="bottom"
                 android:gravity="center"
                 android:paddingRight="8dp"
-                android:textColor="@color/back_ground"
+                android:textColor="#80252525"
                 android:layout_marginBottom="3dp"/>
 
         </LinearLayout>

@@ -33,15 +33,15 @@ public class GalleryFragment extends Fragment {
     RecyclerView recyclerView;
     LottieAnimationView aviLoader;
     RelativeLayout rl_progress;
-    ImageFolderAdapter imageFolderAdapter;
+    public static ImageFolderAdapter imageFolderAdapter;
     ArrayList<AlbumDetail> albumDetails = new ArrayList<>();
 
     public static Handler album_handler;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)  {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_gallery, container, false);
+        View view = inflater.inflate(R.layout.fragment_gallery, container, false);
 //        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         recyclerView = view.findViewById(R.id.image_rec);
@@ -59,37 +59,37 @@ public class GalleryFragment extends Fragment {
 
     }
 
-    public void intializehandler(){
+    public void intializehandler() {
 
         album_handler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(@NonNull Message msg) {
                 int code = msg.what;
-                if (code == 23){
-                    try{
+                if (code == 23) {
+                    try {
                         albumDetails = new ArrayList<>();
-                        albumDetails = (ArrayList<AlbumDetail>)msg.obj;
-                        Utils.mFolderDialogList=new ArrayList<>();
+                        albumDetails = (ArrayList<AlbumDetail>) msg.obj;
+                        Utils.mFolderDialogList = new ArrayList<>();
                         AlbumDetail FirstModel1 = new AlbumDetail();
                         FirstModel1.setFolderName("Create_Album");
                         FirstModel1.setType(1);
-                        Utils.mFolderDialogList.add(0,FirstModel1);
+                        Utils.mFolderDialogList.add(0, FirstModel1);
                         Utils.mFolderDialogList.addAll(albumDetails);
 
-                        if(albumDetails != null && albumDetails.size() > 0){
+                        if (albumDetails != null && albumDetails.size() > 0) {
                             imageFolderAdapter.Addall(albumDetails);
-                            Log.d("TAG", "handleMessage:--- " + albumDetails.size());
+
                         }
-                        if(Utils.VIEW_TYPE.equals("Grid")){
-                            recyclerView.setLayoutManager(new GridLayoutManager(getContext(),Utils.COLUMN));
+                        if (Utils.VIEW_TYPE.equals("Grid")) {
+                            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), Utils.COLUMN));
                             recyclerView.setLayoutAnimation(null);
                         }
                         recyclerView.setAdapter(imageFolderAdapter);
                         imageFolderAdapter.notifyDataSetChanged();
                         stopAnim();
 
-                    }catch (Exception e){
-                        Log.e("Error",e.getMessage());
+                    } catch (Exception e) {
+                        Log.e("Error", e.getMessage());
                     }
                 }
                 return false;
@@ -101,9 +101,9 @@ public class GalleryFragment extends Fragment {
             public void run() {
                 startAnim();
                 // activity.startService(new Intent(activity, GetFileList.class).putExtra("action","album"));
-                if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
+                if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                     getActivity().startForegroundService(new Intent(getActivity(), GetFileList.class).putExtra("action", "album"));
-                }else{
+                } else {
                     getActivity().startService(new Intent(getActivity(), GetFileList.class).putExtra("action", "album"));
                 }
 
@@ -112,11 +112,12 @@ public class GalleryFragment extends Fragment {
 
     }
 
-    public  void startAnim() {
+    public void startAnim() {
         rl_progress.setVisibility(View.VISIBLE);
         aviLoader.setVisibility(View.VISIBLE);
     }
-    public  void stopAnim() {
+
+    public void stopAnim() {
         rl_progress.setVisibility(View.GONE);
         aviLoader.setVisibility(View.GONE);
     }
@@ -129,4 +130,13 @@ public class GalleryFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Utils.IsUpdate) {
+            intializehandler();
+            Utils.IsUpdate = false;
+
+        }
+    }
 }

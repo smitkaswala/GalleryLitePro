@@ -43,6 +43,9 @@ public class ImageFolderAdapter extends RecyclerView.Adapter<ImageFolderAdapter.
         this.activity = activity;
     }
 
+    public ImageFolderAdapter() {
+    }
+
     @NonNull
     @Override
     public ImageFolderAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

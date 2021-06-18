@@ -2,12 +2,14 @@ package com.example.gallerylitepro.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -17,6 +19,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.alexvasilkov.gestures.views.GestureImageView;
 import com.bumptech.glide.Glide;
+import com.example.gallerylitepro.Activitys.VideoPlayActivity;
 import com.example.gallerylitepro.Classes.CustomViewPager;
 import com.example.gallerylitepro.Classes.RotateTransformation;
 import com.example.gallerylitepro.R;
@@ -40,6 +43,7 @@ public class ImageShowAdapter extends PagerAdapter {
     Activity _activity;
     public static ArrayList<String> filesPath;
     GestureImageView mImage;
+    ImageView play_button;
     HashMap<Integer,GestureImageView> Rotate_ImageObject = new HashMap<>();
     Integer Angle[] = new Integer[]{90, 180, -90, 0};
     List<Integer> roratelist;
@@ -54,52 +58,96 @@ public class ImageShowAdapter extends PagerAdapter {
         this.pager =pager;
     }
 
-
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        LayoutInflater inflater = (LayoutInflater) _activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View viewLayout = inflater.inflate(R.layout.fullscreen_image, container, false);
-        String FileListModel = filesPath.get(position);
 
-        mImage = (GestureImageView) viewLayout.findViewById(R.id.mImage);
-        mImage.getController().getSettings().setMaxZoom(3f).setDoubleTapZoom(3f);
-        mImage.getController().getSettings()
-                .setPanEnabled(true)
-                .setZoomEnabled(true)
-                .setDoubleTapEnabled(true)
-                .setRotationEnabled(true)
-                .setRestrictRotation(true);
+        if (filesPath.get(position).contains(".mp4")){
+            LayoutInflater inflater = (LayoutInflater) _activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View viewLayout = inflater.inflate(R.layout.fullscreen_videos, container, false);
+            String FileListModel = filesPath.get(position);
+            GestureImageView img = (GestureImageView) viewLayout.findViewById(R.id.mImage);
+            img.getController().getSettings().setMaxZoom(3f).setDoubleTapZoom(3f);
+            img.getController().getSettings()
+                    .setPanEnabled(true)
+                    .setZoomEnabled(true)
+                    .setDoubleTapEnabled(true)
+                    .setRotationEnabled(true)
+                    .setRestrictRotation(true);
 
-        Glide.with(_activity)
-                .load(FileListModel)
-                .override(900, 900)
-                .into(mImage);
+            Glide.with(_activity)
+                    .load(FileListModel)
+                    .override(900, 900)
+                    .into(img);
 
-        Rotate_ImageObject.put(position, mImage);
+            play_button = viewLayout.findViewById(R.id.play_button);
+            play_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(_activity, VideoPlayActivity.class);
+                    intent.putExtra("path",filesPath.get(position));
+                    intent.putExtra("size",filesPath.get(position));
+                    intent.putExtra("dateAdd",filesPath.get(position));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    _activity.startActivity(intent);
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
-            mImage.getController().enableScrollInViewPager(pager); //----after zoom image scrolling allow to another image*/
+                }
+            });
+
+            Rotate_ImageObject.put(position, img);
+
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
+                img.getController().enableScrollInViewPager(pager);
+            }
+
+            ((ViewPager) container).addView(viewLayout);
+            return viewLayout;
+        }else {
+
+            LayoutInflater inflater = (LayoutInflater) _activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View viewLayout = inflater.inflate(R.layout.fullscreen_image, container, false);
+            String FileListModel = filesPath.get(position);
+            mImage = (GestureImageView) viewLayout.findViewById(R.id.mImage);
+            mImage.getController().getSettings().setMaxZoom(3f).setDoubleTapZoom(3f);
+            mImage.getController().getSettings()
+                    .setPanEnabled(true)
+                    .setZoomEnabled(true)
+                    .setDoubleTapEnabled(true)
+                    .setRotationEnabled(true)
+                    .setRestrictRotation(true);
+
+            Glide.with(_activity)
+                    .load(FileListModel)
+                    .override(900, 900)
+                    .into(mImage);
+
+            Rotate_ImageObject.put(position, mImage);
+
+
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
+                mImage.getController().enableScrollInViewPager(pager); //----after zoom image scrolling allow to another image*/
+            }
+
+            mImage.setOnTouchListener(new View.OnTouchListener(){
+                @Override
+                public boolean onTouch(View v, MotionEvent event){
+                    mRotateRL.setVisibility(View.GONE);
+                    mOptionRL.setVisibility(View.GONE);
+                    return false;
+                }
+            });
+
+            mImage.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    mRotateRL.setVisibility(View.GONE);
+                    mOptionRL.setVisibility(View.GONE);
+                }
+            });
+
+            ((ViewPager) container).addView(viewLayout);
+            return viewLayout;
+
         }
-
-        mImage.setOnTouchListener(new View.OnTouchListener(){
-            @Override
-            public boolean onTouch(View v, MotionEvent event){
-                mRotateRL.setVisibility(View.GONE);
-                mOptionRL.setVisibility(View.GONE);
-                return false;
-            }
-        });
-
-        mImage.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                mRotateRL.setVisibility(View.GONE);
-                mOptionRL.setVisibility(View.GONE);
-            }
-        });
-
-        ((ViewPager) container).addView(viewLayout);
-        return viewLayout;
 
     }
 

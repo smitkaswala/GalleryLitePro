@@ -31,6 +31,16 @@ public class AlbumDetail implements Serializable {
     public Bitmap bitmap;
     public String date;
     public long size;
+    public String duration;
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
     int type;
 
     public String getDate() {
@@ -121,16 +131,23 @@ public class AlbumDetail implements Serializable {
         this.type = type;
     }
 
+
     @Override
     public String toString() {
         return "AlbumDetail{" +
-                "folderName='" + folderName + '\'' +
+                "isDirectory=" + isDirectory +
                 ", bucket_id='" + bucket_id + '\'' +
+                ", bucketName='" + bucketName + '\'' +
+                ", bucketPath='" + bucketPath + '\'' +
                 ", id='" + id + '\'' +
+                ", Name='" + Name + '\'' +
+                ", folderName='" + folderName + '\'' +
                 ", pathList=" + pathList +
                 ", FolderPath='" + FolderPath + '\'' +
                 ", bitmap=" + bitmap +
                 ", date='" + date + '\'' +
+                ", size=" + size +
+                ", duration='" + duration + '\'' +
                 ", type=" + type +
                 '}';
     }

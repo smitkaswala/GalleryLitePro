@@ -1,66 +1,131 @@
 package com.example.gallerylitepro.Fregment;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.example.gallerylitepro.Adapters.ImageFolderAdapter;
+import com.example.gallerylitepro.Adapters.VideoFolderAdapter;
+import com.example.gallerylitepro.Classes.AlbumDetail;
 import com.example.gallerylitepro.R;
+import com.example.gallerylitepro.Service.GetFileList;
+import com.example.gallerylitepro.Utils.Utils;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link VideoFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+
 public class VideoFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    RecyclerView recyclerView;
+    LottieAnimationView aviLoader;
+    RelativeLayout rl_progress;
+    public static VideoFolderAdapter videoFolderAdapter;
+    ArrayList<AlbumDetail> albumDetails = new ArrayList<>();
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public VideoFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment VideoFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static VideoFragment newInstance(String param1, String param2) {
-        VideoFragment fragment = new VideoFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    public static Handler album_handler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_video, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_video, container, false);
+
+        videoFolderAdapter = new VideoFolderAdapter(getActivity());
+
+        recyclerView = view.findViewById(R.id.image_rec);
+        aviLoader = view.findViewById(R.id.aviLoader);
+        rl_progress = view.findViewById(R.id.rl_progress);
+
+        intializehandler();
+
+        return view;
+
     }
+
+    public void intializehandler() {
+
+        album_handler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(@NonNull Message msg) {
+                int code = msg.what;
+                if (code == 25) {
+                    try {
+                        albumDetails = new ArrayList<>();
+                        albumDetails = (ArrayList<AlbumDetail>) msg.obj;
+                        Utils.mVideosDialogList = new ArrayList<>();
+                        AlbumDetail FirstModel1 = new AlbumDetail();
+                        FirstModel1.setFolderName("Create_Album");
+                        FirstModel1.setType(1);
+                        Utils.mVideosDialogList.add(0, FirstModel1);
+                        Utils.mVideosDialogList.addAll(albumDetails);
+
+                        if (albumDetails != null && albumDetails.size() > 0) {
+                            videoFolderAdapter.Addall(albumDetails);
+
+                        }
+                        if (Utils.VIEW_TYPE.equals("Grid")) {
+                            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), Utils.COLUMN));
+                            recyclerView.setLayoutAnimation(null);
+                        }
+                        recyclerView.setAdapter(videoFolderAdapter);
+                        videoFolderAdapter.notifyDataSetChanged();
+                        stopAnim();
+
+                    } catch (Exception e) {
+                        Log.e("Error", e.getMessage());
+                    }
+                }
+                return false;
+            }
+        });
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startAnim();
+                // activity.startService(new Intent(activity, GetFileList.class).putExtra("action","album"));
+                if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    getActivity().startForegroundService(new Intent(getActivity(), GetFileList.class).putExtra("action", "album_video"));
+                } else {
+                    getActivity().startService(new Intent(getActivity(), GetFileList.class).putExtra("action", "album_video"));
+                }
+
+            }
+        }, 100);
+
+    }
+
+    public void startAnim() {
+        rl_progress.setVisibility(View.VISIBLE);
+        aviLoader.setVisibility(View.VISIBLE);
+    }
+
+    public void stopAnim() {
+        rl_progress.setVisibility(View.GONE);
+        aviLoader.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Utils.IsUpdateVideos) {
+            intializehandler();
+            Utils.IsUpdateVideos = false;
+
+        }
+    }
+
 }

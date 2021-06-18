@@ -1,5 +1,6 @@
 package com.example.gallerylitepro.Activitys;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.FileProvider;
@@ -44,6 +45,7 @@ import android.widget.Toast;
 import com.example.gallerylitepro.Adapters.FolderDialogAdapter;
 import com.example.gallerylitepro.Adapters.ImageAdapter;
 import com.example.gallerylitepro.Adapters.ImageShowAdapter;
+import com.example.gallerylitepro.Adapters.VideoShowAdapter;
 import com.example.gallerylitepro.Classes.CustomViewPager;
 import com.example.gallerylitepro.Interface.FolderInterface;
 import com.example.gallerylitepro.R;
@@ -74,10 +76,12 @@ public class EditingActivity extends AppCompatActivity {
 
     ImageView bt_rotate, slide_menu, ic_back, favourite_image;
     ImageView mSlideshow, mEdit, mDelete, mShare;
-    LinearLayout first_linear, second_linear;
+    ImageView mDelete_item, mFavourite_item, mShare_item;
+    LinearLayout first_linear, second_linear , video_linear;
     LinearLayout mRotateRight, mRightLeft, mRotateBottom;
     LinearLayout mCopy, mMove, mRename, mPrint, mWallpaper, mInfo;
     ImageShowAdapter imageShowAdapter;
+    VideoShowAdapter videoShowAdapter;
     TextView image_name;
     RecyclerView mFolderRec;
     public static LinearLayout mRotateRL, mOptionRL;
@@ -113,7 +117,6 @@ public class EditingActivity extends AppCompatActivity {
 
     public void start() {
 
-
         bt_rotate = findViewById(R.id.bt_rotate);
         slide_menu = findViewById(R.id.slide_menu);
         ic_back = findViewById(R.id.ic_back);
@@ -123,7 +126,10 @@ public class EditingActivity extends AppCompatActivity {
         mRotateRL = findViewById(R.id.mRotateRL);
         second_linear = findViewById(R.id.second_linear);
         first_linear = findViewById(R.id.first_linear);
-
+        video_linear = findViewById(R.id.video_linear);
+        mDelete_item = findViewById(R.id.mDelete_item);
+        mFavourite_item = findViewById(R.id.mFavourite_item);
+        mShare_item = findViewById(R.id.mShare_item);
 
         mSlideshow = findViewById(R.id.mSlideshow);
         mEdit = findViewById(R.id.mEdit);
@@ -318,10 +324,76 @@ public class EditingActivity extends AppCompatActivity {
             }
         });
 
+        mDelete_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteDialog = new Dialog(EditingActivity.this, android.R.style.Theme_DeviceDefault);
+                deleteDialog.requestWindowFeature(1);
+                deleteDialog.setContentView(R.layout.delete_dialog);
+                mDeleteFile = (TextView) deleteDialog.findViewById(R.id.txt_filename);
+                mDialogCancel = (CardView) deleteDialog.findViewById(R.id.mCancel);
+                mDialogDelete = (CardView) deleteDialog.findViewById(R.id.mDelete);
+                deleteDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+                deleteDialog.setCanceledOnTouchOutside(true);
+                Utils.IsUpdateVideos = true;
+                int position = mImagePager.getCurrentItem();
+                deleteDialog.show();
+                File file = new File(list.get(position));
+                mDeleteFile.setText(file.getName());
+                mDialogDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deleteDialog.dismiss();
+                        videoShowAdapter.DeleteAction(position, From);
+                    }
+                });
+                mDialogCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deleteDialog.dismiss();
+                    }
+                });
+            }
+        });
+
+        mFavourite_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SetAsFavourite();
+            }
+        });
+
+        mShare_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String path;
+                File file;
+                Uri uri;
+
+                path = list.get(mImagePager.getCurrentItem());
+                file = new File(path);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    uri = FileProvider.getUriForFile(EditingActivity.this, getPackageName() + ".provider", file);
+                } else {
+                    uri = Uri.fromFile(file);
+                }
+
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                sharingIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                sharingIntent.setType("video/*");
+                sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                startActivity(Intent.createChooser(sharingIntent, "Share Via"));
+
+            }
+        });
+
     }
 
     public void init() {
-        SharedPreferences sharedPreferences = getSharedPreferences("Favourites_pref", MODE_PRIVATE);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("Favourites_pref",MODE_PRIVATE);
         Gson gson = new Gson();
 
         mFavouriteImageList = new ArrayList<>();
@@ -355,7 +427,19 @@ public class EditingActivity extends AppCompatActivity {
                             favourite_image.setImageDrawable(getResources().getDrawable(R.drawable.ic_like));
                         }
                     }
+                    if (list.get(position).contains(".mp4")){
+                        video_linear.setVisibility(View.VISIBLE);
+                        second_linear.setVisibility(View.GONE);
+                        bt_rotate.setVisibility(View.GONE);
+                        slide_menu.setVisibility(View.GONE);
+                    }else {
+                        video_linear.setVisibility(View.GONE);
+                        second_linear.setVisibility(View.VISIBLE);
+                        bt_rotate.setVisibility(View.VISIBLE);
+                        slide_menu.setVisibility(View.VISIBLE);
+                    }
                 }
+
             }
 
             @Override
@@ -363,6 +447,7 @@ public class EditingActivity extends AppCompatActivity {
 
             }
         });
+
         File file = new File(list.get(currenpositionToDisplay));
         image_name.setText((currenpositionToDisplay + 1) + " / " + (list.size()));
         if (mFavouriteImageList.size() > 0) {
@@ -372,6 +457,15 @@ public class EditingActivity extends AppCompatActivity {
                 favourite_image.setImageDrawable(getResources().getDrawable(R.drawable.ic_like));
             }
         }
+
+        if (list.get(currenpositionToDisplay).contains(".mp4")){
+            video_linear.setVisibility(View.VISIBLE);
+            second_linear.setVisibility(View.GONE);
+        }else {
+            video_linear.setVisibility(View.GONE);
+            second_linear.setVisibility(View.VISIBLE);
+        }
+
         mImagePager.setCurrentItem(currenpositionToDisplay);
         folderInterface = new FolderInterface() {
             @Override
@@ -561,7 +655,9 @@ public class EditingActivity extends AppCompatActivity {
     }
 
     public void SetAsWallaper(int postion) {
+
         try {
+
             if (list.get(postion).startsWith("https")) {
                 Toast.makeText(EditingActivity.this, "A problem occur with this file!", Toast.LENGTH_SHORT).show();
             } else {
@@ -581,7 +677,9 @@ public class EditingActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(Intent.createChooser(intent, "Set as:"));
             }
+
         } catch (Exception e) {
+
         }
     }
 
@@ -805,6 +903,7 @@ public class EditingActivity extends AppCompatActivity {
         this.msConn.connect();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     public void SetAsFavourite() {
         File file = new File(list.get(mImagePager.getCurrentItem()));
         SharedPreferences sharedPreferences = getSharedPreferences("Favourites_pref", MODE_PRIVATE);

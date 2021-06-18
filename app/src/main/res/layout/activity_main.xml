@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/first_menu"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
@@ -18,7 +18,7 @@
             android:layout_height="50dp"
             android:orientation="horizontal">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -33,39 +33,41 @@
         </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/search_layout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:visibility="visible"
             android:orientation="horizontal">
 
             <EditText
+                android:id="@+id/mSearch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="@color/black"
-                android:hint="Search Your Album"
-                android:textColorHint="@color/sug_text"
-                android:background="@drawable/bg2"
+                android:layout_marginLeft="35dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:paddingRight="15dp"
-                android:paddingLeft="15dp"
-                android:shadowColor="@color/black"
+                android:background="@drawable/bg2"
+                android:hint="Search Your Album"
+                android:imeOptions="actionDone"
                 android:maxLines="1"
-                android:textCursorDrawable="@drawable/bg3"
-                android:textSize="13sp"
-                android:imeOptions="actionDone"/>
+                android:singleLine="true"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/sug_text"
+                android:textSize="13sp" />
 
             <ImageView
                 android:layout_width="35dp"
                 android:layout_height="50sp"
-                android:background="@drawable/bg1"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg1"
                 android:foregroundGravity="left"
                 android:padding="10dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/ic_sreach"
-                android:layout_alignParentRight="true">
+                android:src="@drawable/ic_sreach">
 
             </ImageView>
 
@@ -75,20 +77,203 @@
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_above="@+id/second_menu"
         android:layout_below="@+id/first_menu"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <LinearLayout
         android:id="@+id/second_menu"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="75dp"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/bottom_nav">
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal">
 
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
+        <RelativeLayout
+            android:id="@+id/photos"
+            android:layout_width="match_parent"
+            android:layout_height="73dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:id="@+id/photo_linear"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg2"
+                android:backgroundTint="#8B92F9">
+
+                <TextView
+                    android:id="@+id/photo_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="17dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="3dp"
+                    android:fontFamily="@font/vidaloka"
+                    android:gravity="end"
+                    android:paddingRight="8dp"
+                    android:text="Photos"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="60.5dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg15">
+
+                <com.example.gallerylitepro.Utils.BlurLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg15">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="8dp"
+                            android:src="@drawable/ic_photos_list" />
+
+                    </LinearLayout>
+
+
+                </com.example.gallerylitepro.Utils.BlurLayout>
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/video"
+            android:layout_width="match_parent"
+            android:layout_height="73dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:id="@+id/video_linear"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg2"
+                android:backgroundTint="@color/white">
+
+                <TextView
+                    android:id="@+id/video_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="17dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="3dp"
+                    android:fontFamily="@font/vidaloka"
+                    android:gravity="end"
+                    android:paddingRight="8dp"
+                    android:text="Videos"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="60.5dp"
+                android:layout_height="48dp"
+                android:background="@android:color/transparent">
+
+                <com.example.gallerylitepro.Utils.BlurLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg15">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_player" />
+
+                    </LinearLayout>
+
+
+                </com.example.gallerylitepro.Utils.BlurLayout>
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/like"
+            android:layout_width="match_parent"
+            android:layout_height="73dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:id="@+id/like_linear"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg2"
+                android:backgroundTint="@color/white">
+
+                <TextView
+                    android:id="@+id/favourite_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="17dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="3dp"
+                    android:fontFamily="@font/vidaloka"
+                    android:gravity="end"
+                    android:paddingRight="8dp"
+                    android:text="Favourite"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="60.5dp"
+                android:layout_height="48dp"
+                android:background="@android:color/transparent">
+
+                <com.example.gallerylitepro.Utils.BlurLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg15">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bg4"
+                            android:padding="11dp"
+                            android:src="@drawable/ic_heart" />
+
+                    </LinearLayout>
+
+                </com.example.gallerylitepro.Utils.BlurLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

@@ -1,2 +1,5 @@
+include ':croppylib'
+include ':aspectratiorecyclerviewlib'
+include ':sticker'
 include ':app'
 rootProject.name = "GalleryLitePro"

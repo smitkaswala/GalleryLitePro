@@ -345,4 +345,44 @@
             android:src="@drawable/ic_share"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/video_linear"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg14"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/mDelete_item"
+            android:layout_weight="1"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginRight="25dp"
+            android:layout_gravity="center"
+            android:padding="10dp"
+            android:src="@drawable/ic_delete"/>
+
+        <ImageView
+            android:id="@+id/mFavourite_item"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:padding="9dp"
+            android:src="@drawable/ic_like"
+            android:background="@drawable/ic_circle_view"/>
+
+        <ImageView
+            android:id="@+id/mShare_item"
+            android:layout_weight="1"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="25dp"
+            android:padding="9dp"
+            android:src="@drawable/ic_share"/>
+
+    </LinearLayout>
+
 </RelativeLayout>

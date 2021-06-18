@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/details_container"
+    android:background="@drawable/bg5"
+    app:cardCornerRadius="16dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="12dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="Properties"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
+                android:text="Name"
+                android:textColor="@color/text_color"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_image_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/roboto"
+                android:text="Unknown"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
+                android:text="Path"
+                android:textColor="@color/text_color"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_image_path"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/roboto"
+                android:text="Unknown"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
+                android:text="Size"
+                android:textColor="@color/text_color"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_image_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/roboto"
+                android:textColor="@color/white"
+                android:text="Unknown"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/btn_details_ok"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_gravity="end"
+            android:padding="@dimen/_10sdp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_done" />
+
+    </LinearLayout>
+
+</LinearLayout>
